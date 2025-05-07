@@ -1,0 +1,24 @@
+---
+title: "Test"
+format: html
+---
+
+```{r}
+library(rvest)
+
+page <- read_html("htmlTables/test.Rhtml")  # path to saved HTML
+tables <- html_nodes(page, "table") %>% html_table(fill = TRUE)
+
+tables_filtered <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
+head(tables_filtered[[1]])
+```
+```{r}
+df <- tables_filtered[[1]]
+df$Time <- as.numeric(df$Time)  # Make sure Time is numeric
+
+# Plot histogram of times
+ggplot(df, aes(x = Time)) +
+  geom_bar() +  # Or use geom_histogram() for continuous data
+  labs(title = "Distribution of Times", x = "Time (seconds)", y = "Count")
+```
+
