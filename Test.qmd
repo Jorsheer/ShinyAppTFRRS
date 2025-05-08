@@ -23,14 +23,53 @@ ggplot(df, aes(x = Time)) +
 ```
 
 ```{r}
-page <- read_html("htmlTables/Indoor2025.Rhtml")  # path to saved HTML
-tables <- html_nodes(page, "table") %>% html_table(fill = TRUE)
-
-indoor_2025 <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
-
-page <- read_html("htmlTables/TFRRSIndoor2024.html")  # path to saved HTML
+page <- read_html("htmlTables/MIAC/MIACIndoor2024.html")  # path to saved HTML
 tables <- html_nodes(page, "table") %>% html_table(fill = TRUE)
 
 indoor_2024 <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
+
+
+head(indoor_2024[[31]])
+
+```
+```{r}
+  url <- str_c("htmlTables/MIAC/MIACIndoor", 2024,
+                 ".html")
+  page <- read_html(url)
+  tables <- html_nodes(page, "table") %>% html_table(fill = TRUE)
+
+  indoor_temp <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
+```
+
+
+```{r}
+all_miac <- list()
+entry_index <- 1
+
+for(i in(2021:2025)){
+  url <- str_c("htmlTables/MIAC/MIACIndoor", i,
+                 ".html")
+  page <- read_html(url)
+  tables <- html_nodes(page, "table") |>
+    html_table(fill = TRUE)
+
+  indoor_temp <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
+  
+  for (j in 1:length(indoor_temp)) {
+    indoor_temp[[j]] <- indoor_temp[[j]] |>
+      
+    all_miac[[entry_index]] <- indoor_temp[[j]]
+    entry_index <- entry_index + 1
+  }
+}
+
+all_miac_clean <- lapply(all_miac, function(df) {
+  if ("Time" %in% names(df)) {
+    df$Time <- as.character(df$Time)
+  }
+  return(df)
+})
+
+final_miac <- bind_rows(all_miac_clean[1:min(190, length(all_miac_clean))])
 ```
 
