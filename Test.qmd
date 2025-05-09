@@ -52,12 +52,19 @@ for(i in(2021:2025)){
   page <- read_html(url)
   tables <- html_nodes(page, "table") |>
     html_table(fill = TRUE)
-
+  
+  event_names <- page |>
+  html_nodes("h3.font-weight-500") |>
+  html_text(trim = TRUE)
+  
   indoor_temp <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
   
   for (j in 1:length(indoor_temp)) {
     indoor_temp[[j]] <- indoor_temp[[j]] |>
-      
+      mutate(Year = i) |>
+      mutate(Event = event_names[[j]])
+    
+    
     all_miac[[entry_index]] <- indoor_temp[[j]]
     entry_index <- entry_index + 1
   }
@@ -70,6 +77,6 @@ all_miac_clean <- lapply(all_miac, function(df) {
   return(df)
 })
 
-final_miac <- bind_rows(all_miac_clean[1:min(190, length(all_miac_clean))])
+final_miac <- bind_rows(all_miac_clean[1:length(all_miac_clean)])
 ```
 
