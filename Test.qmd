@@ -5,22 +5,12 @@ format: html
 
 ```{r}
 library(rvest)
-
-page <- read_html("htmlTables/test.Rhtml")  # path to saved HTML
-tables <- html_nodes(page, "table") %>% html_table(fill = TRUE)
-
-tables_filtered <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
-head(tables_filtered[[1]])
+library(stringr)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
 ```
-```{r}
-df <- tables_filtered[[1]]
-df$Time <- as.numeric(df$Time)
 
-# Plot histogram of times
-ggplot(df, aes(x = Time)) +
-  geom_bar() +  
-  labs(title = "Distribution of Times", x = "Time (seconds)", y = "Count")
-```
 
 ```{r}
 page <- read_html("htmlTables/MIAC/MIACIndoor2024.html")  # path to saved HTML
@@ -32,15 +22,6 @@ indoor_2024 <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
 head(indoor_2024[[31]])
 
 ```
-```{r}
-  url <- str_c("htmlTables/MIAC/MIACIndoor", 2024,
-                 ".html")
-  page <- read_html(url)
-  tables <- html_nodes(page, "table") %>% html_table(fill = TRUE)
-
-  indoor_temp <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
-```
-
 
 ```{r}
 all_miac <- list()
