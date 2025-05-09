@@ -41,10 +41,10 @@ get_table <- function(year_start, year_end, table_url){
     }
     
     all_table_clean <- lapply(all_table, function(df) {
-    if ("Time" %in% names(df)) {
-      df$Time <- as.character(df$Time)
-    }
-    return(df)
+      if ("Time" %in% names(df)) {
+        df$Time <- as.character(df$Time)
+      }
+      return(df)
     })
     
   }
