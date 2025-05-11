@@ -11,8 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r track-ui, echo=FALSE}
 inputPanel(
-  selectInput("year", "Select Year:", choices = sort(unique(final_nats$Year)), selected = max(final_nats$Year)),
-  selectInput("event", "Select Event:", choices = sort(unique(final_nats$Event)), selected = "60 Meters (Men)")
+  selectInput("year", "Select Year:", choices = sort(unique(final_miacs$Year)), selected = max(final_miacs$Year)),
+  selectInput("event", "Select Event:", choices = sort(unique(final_miacs$Event)), selected = "60 Meters (Men)")
 )
 
 renderPlot({
@@ -27,7 +27,7 @@ renderPlot({
     }
   }
   
-  filtered_data <- final_nats |>
+  filtered_data <- final_miacs |>
     filter(Year == input$year, Event == input$event)
   
   filtered_data$Time <- sapply(filtered_data$Time, convert_time)
