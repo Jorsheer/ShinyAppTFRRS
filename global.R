@@ -5,11 +5,11 @@ library(tidyverse)
 library(dplyr)
 library(ggplot2)
 
-get_table <- function(year_start, year_end, table_url){
+get_table <- function(year_vector, table_url){
   all_table <- list()
   entry_index <- 1
   
-  for(i in(year_start:year_end)){
+  for(i in(year_vector)){
     url <- str_c(table_url, i,
                  ".html")
     page <- read_html(url)
@@ -36,6 +36,12 @@ get_table <- function(year_start, year_end, table_url){
       if ("Time" %in% names(df)) {
         df$Time <- as.character(df$Time)
       }
+      if ("Wind" %in% names(df)) {
+        df$Wind <- as.character(df$Wind)
+      }
+      if ("Points" %in% names(df)) {
+        df$Points <- as.character(df$Points)
+      }
       return(df)
     })
     
@@ -53,14 +59,15 @@ convert_time <- function(time_str) {
   }
 }
 
-final_indoor_miac <- get_table(2021, 2025,"htmlTables/MIAC/MIACIndoor")
+years <- c(2017,2018,2019,2021,2022,2023,2024,2025)
+final_indoor_miac <- get_table(years,"htmlTables/MIAC/MIACIndoor")
 final_miac <- bind_rows(final_indoor_miac[1:length(final_indoor_miac)])
 
 final_miac$Time <- sapply(final_miac$Time, convert_time)
 final_miac$Mark <- gsub("[^0-9\\.]", "", final_miac$Mark)
 final_miac$Mark <- as.numeric(final_miac$Mark)
 
-final_outdoor_nats <- get_table(2021, 2025,"htmlTables/NATS/NATSOutdoor")
+final_outdoor_nats <- get_table(years,"htmlTables/NATS/NATSOutdoor")
 final_nats <- bind_rows(final_outdoor_nats[1:length(final_outdoor_nats)])
 
 final_nats$Time <- sapply(final_nats$Time, convert_time)
