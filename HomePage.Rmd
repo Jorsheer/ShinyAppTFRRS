@@ -1,0 +1,15 @@
+---
+title: "HomePage"
+output: html_document
+date: "2025-05-11"
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[Go to Conference Standings](Conference.Rmd)  
+[Go to National Page](Nationals.Rmd)
+
+

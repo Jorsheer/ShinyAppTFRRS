@@ -116,7 +116,7 @@ inputPanel(
 )
 
 renderPlot({
-  # Clean up the time and mark columns
+
   convert_time <- function(time_str) {
     if (is.na(time_str)) return(NA)
     if (grepl(":", time_str)) {
