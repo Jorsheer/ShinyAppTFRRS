@@ -43,9 +43,26 @@ get_table <- function(year_start, year_end, table_url){
   return(all_table_clean)
 }
 
+convert_time <- function(time_str) {
+  if (is.na(time_str)) return(NA)
+  if (grepl(":", time_str)) {
+    parts <- strsplit(time_str, ":")[[1]]
+    return(as.numeric(parts[1]) * 60 + as.numeric(parts[2]))
+  } else {
+    return(as.numeric(time_str))
+  }
+}
+
 final_indoor_miac <- get_table(2021, 2025,"htmlTables/MIAC/MIACIndoor")
 final_miac <- bind_rows(final_indoor_miac[1:length(final_indoor_miac)])
 
-final_outdoor_nats <- get_table(2012, 2025,"htmlTables/NATS/NATSOutdoor")
+final_miac$Time <- sapply(final_miac$Time, convert_time)
+final_miac$Mark <- gsub("[^0-9\\.]", "", final_miac$Mark)
+final_miac$Mark <- as.numeric(final_miac$Mark)
+
+final_outdoor_nats <- get_table(2021, 2025,"htmlTables/NATS/NATSOutdoor")
 final_nats <- bind_rows(final_outdoor_nats[1:length(final_outdoor_nats)])
 
+final_nats$Time <- sapply(final_nats$Time, convert_time)
+final_nats$Mark <- gsub("[^0-9\\.]", "", final_nats$Mark)
+final_nats$Mark <- as.numeric(final_nats$Mark)

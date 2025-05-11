@@ -11,28 +11,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r track-ui, echo=FALSE}
 inputPanel(
-  selectInput("year", "Select Year:", choices = sort(unique(final_miacs$Year)), selected = max(final_miacs$Year)),
-  selectInput("event", "Select Event:", choices = sort(unique(final_miacs$Event)), selected = "60 Meters (Men)")
+  selectInput("year", "Select Year:", choices = sort(unique(final_miac$Year)), selected = max(final_miac$Year)),
+  selectInput("event", "Select Event:", choices = sort(unique(final_miac$Event)), selected = "60 Meters (Men)")
 )
 
 renderPlot({
-
-  convert_time <- function(time_str) {
-    if (is.na(time_str)) return(NA)
-    if (grepl(":", time_str)) {
-      parts <- strsplit(time_str, ":")[[1]]
-      return(as.numeric(parts[1]) * 60 + as.numeric(parts[2]))
-    } else {
-      return(as.numeric(time_str))
-    }
-  }
   
-  filtered_data <- final_miacs |>
+  filtered_data <- final_miac |>
     filter(Year == input$year, Event == input$event)
-  
-  filtered_data$Time <- sapply(filtered_data$Time, convert_time)
-  filtered_data$Mark <- gsub("[^0-9\\.]", "", filtered_data$Mark)
-  filtered_data$Mark <- as.numeric(filtered_data$Mark)
 
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     barplot(
