@@ -12,14 +12,27 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r track-ui, echo=FALSE}
 inputPanel(
   selectInput("year", "Select Year:", choices = sort(unique(final_miac$Year)), selected = max(final_miac$Year)),
-  selectInput("event", "Select Event:", choices = sort(unique(final_miac$Event)), selected = "60 Meters (Men)")
+  selectInput("event", "Select Event:", choices = sort(unique(final_miac$Event)), selected = "60 Meters (Men)"),
+  sliderInput("athletes", label = "Number of Athletes",
+      min = 1, max = 50, value = 25, step = 1)
 )
 
 renderPlot({
   
   filtered_data <- final_miac |>
     filter(Year == input$year, Event == input$event)
-
+  
+  top_n <- input$athletes
+  if (any(!is.na(filtered_data$Time))) {
+    filtered_data <- filtered_data |>
+      arrange(Time) |>
+      head(top_n)
+  } else if (any(!is.na(filtered_data$Mark))) {
+    filtered_data <- filtered_data |>
+      arrange(desc(Mark)) |>
+      head(top_n)
+  }
+  
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     barplot(
       filtered_data$Mark,
