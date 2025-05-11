@@ -9,50 +9,51 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
-
-To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
-
-## Inputs and Outputs
-
-You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
-
-```{r eruptions, echo=FALSE}
+```{r track-ui, echo=FALSE}
 inputPanel(
-  selectInput("n_breaks", label = "Number of bins:",
-              choices = c(10, 20, 35, 50), selected = 20),
-  
-  sliderInput("bw_adjust", label = "Bandwidth adjustment:",
-              min = 0.2, max = 2, value = 1, step = 0.2)
+  selectInput("year", "Select Year:", choices = sort(unique(final_nats$Year)), selected = max(final_nats$Year)),
+  selectInput("event", "Select Event:", choices = sort(unique(final_nats$Event)), selected = "60 Meters (Men)")
 )
 
 renderPlot({
-  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),
-       xlab = "Duration (minutes)", main = "Geyser eruption duration")
+
+  convert_time <- function(time_str) {
+    if (is.na(time_str)) return(NA)
+    if (grepl(":", time_str)) {
+      parts <- strsplit(time_str, ":")[[1]]
+      return(as.numeric(parts[1]) * 60 + as.numeric(parts[2]))
+    } else {
+      return(as.numeric(time_str))
+    }
+  }
   
-  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
-  lines(dens, col = "blue")
+  filtered_data <- final_nats |>
+    filter(Year == input$year, Event == input$event)
+  
+  filtered_data$Time <- sapply(filtered_data$Time, convert_time)
+  filtered_data$Mark <- gsub("[^0-9\\.]", "", filtered_data$Mark)
+  filtered_data$Mark <- as.numeric(filtered_data$Mark)
+
+  if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
+    barplot(
+      filtered_data$Mark,
+      names.arg = filtered_data$Athlete,
+      las = 2,
+      main = paste("Marks for", input$event),
+      ylab = "Mark"
+    )
+  } else if (any(!is.na(filtered_data$Time))) {
+    barplot(
+      filtered_data$Time,
+      names.arg = filtered_data$Athlete,
+      las = 2,
+      main = paste("Times for", input$event),
+      ylab = "Time (seconds)"
+    )
+  } else {
+    plot.new()
+    text(0.5, 0.5, "No valid data for selected event", cex = 1.5)
+  }
 })
+
 ```
-
-## Embedded Application
-
-It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
-
-```{r tabsets, echo=FALSE}
-shinyAppDir(
-  system.file("examples/06_tabsets", package = "shiny"),
-  options = list(
-    width = "100%", height = 550
-  )
-)
-```
-
-Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
-
-You can also use the `shinyApp` function to define an application inline rather then in an external directory.
-
-In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
-
-
-

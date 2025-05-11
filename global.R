@@ -46,5 +46,6 @@ get_table <- function(year_start, year_end, table_url){
 final_indoor_miac <- get_table(2021, 2025,"htmlTables/MIAC/MIACIndoor")
 final_miac <- bind_rows(final_indoor_miac[1:length(final_indoor_miac)])
 
-final_outdoor_nats <- get_table(2021, 2025,"htmlTables/NATS/NATSOutdoor")
+final_outdoor_nats <- get_table(2012, 2025,"htmlTables/NATS/NATSOutdoor")
 final_nats <- bind_rows(final_outdoor_nats[1:length(final_outdoor_nats)])
+
