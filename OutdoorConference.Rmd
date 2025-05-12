@@ -208,4 +208,6 @@ renderPlot({
 
 ```
 
+<div style="text-align: center; margin-top: 30px;">
+  <a href="HomePage.Rmd" class="btn btn-primary" style="margin: 10px;">Home Page</a>
 
