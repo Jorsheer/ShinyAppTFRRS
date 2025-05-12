@@ -1,9 +1,22 @@
 ---
-title: "Nationals.Rmd"
-output: html_document
-date: "2025-05-11"
+title: "NCAA Division III Nationals Analysis and Trends"
+author: "Josh Charlton & Parker Max"
+output: 
+  html_document:
+    theme: cerulean    
+    highlight: tango
+    css: styles.css   
+    toc: false
 runtime: shiny
 ---
+
+::: {style="text-align: center;"}
+<img src="Mop.jpeg" style="width: 50%; border-radius: 12px; box-shadow: 0px 0px 15px rgba(0,0,0,0.1);"/>
+
+*[Photo Credit: Hannah Robb, St. Olaf College]*
+:::
+
+*Since 2012, the qualifying standards for the NCAA Division III National Championships have increased significantly across every event, reflecting a sharp rise in performance and depth at the national level. This page explores how Division III track and field has progressed over the past 13 years, with top DIII athletes now posting times and marks that are competitive with Division I programs.*
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -57,4 +70,4 @@ renderPlot({
 
 ```
 
-
+<a href="HomePage.Rmd" class="btn btn-primary" style="margin: 50px;">Return to the Homepage</a>
