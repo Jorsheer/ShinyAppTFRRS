@@ -22,7 +22,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 <div style="text-align: center; margin-top: 30px;">
-  <a href="Conference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Conference Analysis</a>
+  <a href="IndoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Indoor Conference Analysis</a>
+  <a href="OutdoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Outdoor Conference Analysis</a>
   <a href="Nationals.Rmd" class="btn btn-success" style="margin: 10px;">NCAA DIII Analysis</a>
 </div>
 
