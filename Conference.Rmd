@@ -1,7 +1,6 @@
 ---
 title: "Conference"
 output: html_document
-date: "2025-05-11"
 runtime: shiny
 ---
 
@@ -34,21 +33,17 @@ renderPlot({
   }
   
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
-    barplot(
-      filtered_data$Mark,
-      names.arg = filtered_data$Athlete,
-      las = 2,
-      main = paste("Marks for", input$event),
-      ylab = "Mark"
-    )
+    ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark, color = Team)) +
+      geom_point(size = 3) +
+      labs(title = paste("Marks for", input$event),
+           x = "Athlete", y = "Mark") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else if (any(!is.na(filtered_data$Time))) {
-    barplot(
-      filtered_data$Time,
-      names.arg = filtered_data$Athlete,
-      las = 2,
-      main = paste("Times for", input$event),
-      ylab = "Time (seconds)"
-    )
+    ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time, color = Team)) +
+      geom_point(size = 3) +
+      labs(title = paste("Times for", input$event),
+           x = "Athlete", y = "Time (seconds)") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
     plot.new()
     text(0.5, 0.5, "No valid data for selected event", cex = 1.5)
@@ -56,3 +51,160 @@ renderPlot({
 })
 
 ```
+
+
+```{r track-ui2, echo=FALSE}
+inputPanel(
+  selectInput("year1", "Select Year 1:", choices = sort(unique(final_miac$Year)), selected = max(final_miac$Year)),
+  selectInput("year2", "Select Year 2:", choices = sort(unique(final_miac$Year)), selected = max(final_miac$Year)),
+  selectInput("event", "Select Event:", choices = sort(unique(final_miac$Event)), selected = "60 Meters (Men)"),
+  sliderInput("athletes", label = "Number of Athletes",
+      min = 1, max = 50, value = 25, step = 1)
+)
+
+renderPlot({
+
+  filtered_data <- final_miac |>
+    filter((Year == input$year1 | Year == input$year2), Event == input$event)
+
+  top_n <- input$athletes
+  if (any(!is.na(filtered_data$Time))) {
+    filtered_data <- filtered_data |>
+      group_by(Year) |>
+      arrange(Time, .by_group = TRUE) |>
+      slice_head(n = top_n) |>
+      ungroup()
+  } else if (any(!is.na(filtered_data$Mark))) {
+    filtered_data <- filtered_data |>
+      group_by(Year) |>
+      arrange(desc(Mark), .by_group = TRUE) |>
+      slice_head(n = top_n) |>
+      ungroup()
+  }
+
+  if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
+    ggplot(filtered_data, aes(x = Place, y = Mark, color = factor(Year))) +
+      geom_point(size = 3) +
+      labs(title = paste("Marks for", input$event),
+           x = "Place", y = "Mark", color = "Year") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
+  } else if (any(!is.na(filtered_data$Time))) {
+    ggplot(filtered_data, aes(x = Place, y = Time, color = factor(Year))) +
+      geom_point(size = 3) +
+      labs(title = paste("Times for", input$event),
+           x = "Place", y = "Time (seconds)", color = "Year") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
+  } else {
+    plot.new()
+    text(0.5, 0.5, "No valid data for selected event", cex = 1.5)
+  }
+})
+
+
+```
+
+```{r track-ui3, echo=FALSE}
+inputPanel(
+  selectInput("year", "Select Year:", choices = sort(unique(final_miac$Year)), selected = max(final_miac$Year)),
+  selectInput("event", "Select Event:", choices = sort(unique(final_miac$Event)), selected = "60 Meters (Men)"),
+  sliderInput("athletes", label = "Number of Athletes",
+      min = 1, max = 50, value = 25, step = 1),
+  selectInput("team", "Select Team:", choices = sort(unique(final_miac$Team)), selected = "St. Olaf")
+)
+
+renderPlot({
+  
+  filtered_data <- final_miac |>
+    filter(Year == input$year, Event == input$event)
+  
+  filtered_data <- filtered_data |>
+    mutate(point_color = ifelse(Team == input$team, "gold", "gray"))
+    
+  top_n <- input$athletes
+  if (any(!is.na(filtered_data$Time))) {
+    filtered_data <- filtered_data |>
+      arrange(Time) |>
+      head(top_n)
+  } else if (any(!is.na(filtered_data$Mark))) {
+    filtered_data <- filtered_data |>
+      arrange(desc(Mark)) |>
+      head(top_n)
+  }
+  
+  if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
+    ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark)) +
+      geom_point(size = 3, color = filtered_data$point_color) +
+      labs(title = paste("Marks for", input$event),
+           x = "Athlete", y = "Mark") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  } else if (any(!is.na(filtered_data$Time))) {
+    ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time)) +
+      geom_point(size = 3, color = filtered_data$point_color) +
+      labs(title = paste("Times for", input$event),
+           x = "Athlete", y = "Time (seconds)") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  } else {
+    plot.new()
+    text(0.5, 0.5, "No valid data for selected event", cex = 1.5)
+  }
+})
+```
+
+```{r track-ui4, echo=FALSE}
+inputPanel(
+  selectInput("event", "Select Event:", choices = sort(unique(final_miac$Event)), selected = "60 Meters (Men)"),
+  sliderInput("athletes", label = "Number of Athletes",
+      min = 1, max = 50, value = 25, step = 1),
+  checkboxGroupInput("selected_years", "Select Years:",
+                     choices = sort(unique(final_miac$Year)),
+                     selected = sort(unique(final_miac$Year)))
+)
+
+renderPlot({
+  
+  event_data <- final_miac |>
+    filter(Event == input$event, Year %in% input$selected_years)
+
+  top_n <- input$athletes
+
+  if (all(is.na(event_data$Time)) && any(!is.na(event_data$Mark))) {
+    filtered_data <- event_data |>
+      filter(!is.na(Mark)) |>
+      group_by(Year) |>
+      arrange(desc(Mark)) |>
+      slice_head(n = top_n) |>
+      ungroup()
+    
+    ggplot(filtered_data, aes(x = factor(Year), y = Mark, fill = factor(Year))) +
+      geom_boxplot(alpha = 0.6) +
+      geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
+      labs(title = paste("Top", top_n, "Marks per Year for", input$event),
+           x = "Year", y = "Mark") +
+      theme_minimal()
+
+  } else if (any(!is.na(event_data$Time))) {
+    filtered_data <- event_data |>
+      filter(!is.na(Time)) |>
+      group_by(Year) |>
+      arrange(Time) |>
+      slice_head(n = top_n) |>
+      ungroup()
+    
+    ggplot(filtered_data, aes(x = factor(Year), y = Time, fill = factor(Year))) +
+      geom_boxplot(alpha = 0.6) +
+      geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
+      labs(title = paste("Top", top_n, "Times per Year for", input$event),
+           x = "Year", y = "Time (seconds)") +
+      theme_minimal()
+
+  } else {
+    plot.new()
+    text(0.5, 0.5, "No valid data for selected event", cex = 1.5)
+  }
+})
+
+
+```
+
