@@ -8,6 +8,8 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Event Display
+
 ```{r track-ui, echo=FALSE}
 inputPanel(
   selectInput("year", "Select Year:", choices = sort(unique(final_miac_indoor$Year)), selected = max(final_miac_indoor$Year)),
@@ -52,6 +54,7 @@ renderPlot({
 
 ```
 
+## Year Comparison
 
 ```{r track-ui2, echo=FALSE}
 inputPanel(
@@ -105,6 +108,9 @@ renderPlot({
 
 ```
 
+## Team Search
+
+
 ```{r track-ui3, echo=FALSE}
 inputPanel(
   selectInput("year", "Select Year:", choices = sort(unique(final_miac_indoor$Year)), selected = max(final_miac_indoor$Year)),
@@ -151,6 +157,8 @@ renderPlot({
   }
 })
 ```
+
+## Boxplots
 
 ```{r track-ui4, echo=FALSE}
 inputPanel(

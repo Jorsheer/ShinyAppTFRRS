@@ -9,45 +9,44 @@ get_table <- function(year_vector, table_url){
   all_table <- list()
   entry_index <- 1
   
-  for(i in(year_vector)){
-    url <- str_c(table_url, i,
-                 ".html")
+  for(i in year_vector){
+    url <- str_c(table_url, i, ".html")
     page <- read_html(url)
-    tables <- html_nodes(page, "table") |>
-      html_table(fill = TRUE)
     
-    event_names <- page |>
-      html_nodes("h3.font-weight-500") |>
-      html_text(trim = TRUE)
+    event_blocks <- html_elements(page, "div.row.gender_m, div.row.gender_f")
     
-    table_temp <- tables[sapply(tables, function(tbl) nrow(tbl) > 1)]
-    
-    for (j in 1:length(table_temp)) {
-      table_temp[[j]] <- table_temp[[j]] |>
-        mutate(Year = i) |>
-        mutate(Event = event_names[[j]])
+    for (block in event_blocks) {
+      event_name <- block |> 
+        html_element("h3.font-weight-500") |> 
+        html_text() |> 
+        str_squish()
       
+      table_node <- block |> html_element("table")
       
-      all_table[[entry_index]] <- table_temp[[j]]
-      entry_index <- entry_index + 1
+      if (is.na(table_node)) next
+      
+      table_data <- html_table(table_node, fill = TRUE)
+      
+      if (nrow(table_data) > 0) {
+        table_data <- table_data |>
+          mutate(Year = i, Event = event_name)
+        
+        all_table[[entry_index]] <- table_data
+        entry_index <- entry_index + 1
+      }
     }
-    
-    all_table_clean <- lapply(all_table, function(df) {
-      if ("Time" %in% names(df)) {
-        df$Time <- as.character(df$Time)
-      }
-      if ("Wind" %in% names(df)) {
-        df$Wind <- as.character(df$Wind)
-      }
-      if ("Points" %in% names(df)) {
-        df$Points <- as.character(df$Points)
-      }
-      return(df)
-    })
-    
   }
+  
+  all_table_clean <- lapply(all_table, function(df) {
+    if ("Time" %in% names(df)) df$Time <- as.character(df$Time)
+    if ("Wind" %in% names(df)) df$Wind <- as.character(df$Wind)
+    if ("Points" %in% names(df)) df$Points <- as.character(df$Points)
+    return(df)
+  })
+  
   return(all_table_clean)
 }
+
 
 convert_time <- function(time_str) {
   if (is.na(time_str)) return(NA)
