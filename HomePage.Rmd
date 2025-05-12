@@ -9,9 +9,10 @@ output:
     toc: false
 runtime: shiny
 ---
-<div style="text-align: center;">
-  <img src="us.jpg" style="width: 50%; border-radius: 12px; box-shadow: 0px 0px 15px rgba(0,0,0,0.1);" />
-</div>
+
+::: {style="text-align: center;"}
+<img src="us.jpg" style="border-radius: 12px; box-shadow: 0px 0px 15px rgba(0,0,0,0.1);" width="76%"/>
+:::
 
 *Over the past decade, Division III track and field has seen an explosive growth in talent and depth. From humble beginnings as an inclusive option for student-athletes prioritizing academics over elite competition, Division III track and field has increasingly become an alternative to Division I athletics. The MIAC and St. Olaf track teams have mirrored these trends. In this project, we aim to analyze the trends for within the MIAC, and across Division III as a whole. In this project, we aim to create visualizations that highlight how qualifying standards have evolved and how the overall depth of talent in the sport has grown over time.*
 
@@ -21,12 +22,6 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<div style="text-align: center; margin-top: 30px;">
-  <a href="IndoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Indoor Conference Analysis</a>
-  <a href="OutdoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Outdoor Conference Analysis</a>
-  <a href="Nationals.Rmd" class="btn btn-primary" style="margin: 10px;">NCAA DIII Analysis</a>
-</div>
-
-
-
-
+::: {style="text-align: center; margin-top: 30px;"}
+<a href="IndoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Indoor Conference Analysis</a> <a href="OutdoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Outdoor Conference Analysis</a> <a href="Nationals.Rmd" class="btn btn-primary" style="margin: 10px;">NCAA DIII Analysis</a>
+:::
