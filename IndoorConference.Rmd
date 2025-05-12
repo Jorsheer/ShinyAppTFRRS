@@ -8,7 +8,15 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+The Minnesota Intercollegiate Athletic Conference (MIAC)is an intercollegiate athletic conference that competes in the National Collegiate Athletic Association (NCAA) Division III. All 13 of the member schools are located in Minnesota and are private institutions, with only two being non-sectarian.
+
+In the context of track and field, each conference can choose what events they choose to have at their conference championship, but most conferences follow closely to the events that are present at the D3 national meet. The events that take athletes compete in the 60m, 200m, 400m, 800m, mile, 3000m, 5000m, 60m hurdles, 4x200m relay, 4x400m relay, and distance medley relay on the track, along with the high jump, pole vault, long jump, triple jump, shot put, and weight throw in the field, plus the men's heptathlon and women's pentathlon multi-events.
+
+Below are different graphs that are fun to display the MIAC over the years, our goal is to show the overall "strength" of the MIAC between different events over the years, displaying athletes and their accomplishments. All data below is collected through the "Performance Lists" on TFRRS, which displays any personal records achieved during the indoor season.
+
 ## Event Display
+
+First is the event display. This shows the different events you can select, and the different times that earned their respective places in the MIAC. This is used to visualize a single year, and helps clear up data from the graphs below.
 
 ```{r track-ui, echo=FALSE}
 inputPanel(
@@ -55,6 +63,8 @@ renderPlot({
 ```
 
 ## Year Comparison
+
+The year comparison graph is used to compare two years in any given event. This can be used to tell the strength of the depth of the conference, since it is possible to look up to 50 athletes at any given time. Simply select the two years desired, along with the event and the number of athletes depending on how deep you want to observe.
 
 ```{r track-ui2, echo=FALSE}
 inputPanel(
@@ -110,6 +120,7 @@ renderPlot({
 
 ## Team Search
 
+The team search is used to see one particular team in any given event. Simply select the event you want to observe, along with the team you want to highlight. Athletes from this event that are on the selected team will be shown as gold on the scatterplot.
 
 ```{r track-ui3, echo=FALSE}
 inputPanel(
@@ -159,6 +170,8 @@ renderPlot({
 ```
 
 ## Boxplots
+
+Boxplots here are used to show the IQR of any given event. This can be a great comparison of averages across years, as well as the 25th and 75th percentile. There is also jitter plot overlayed to display the athletes contributing to the plot. Simply select the event and the amount of athletes, and then is possible to display the years.
 
 ```{r track-ui4, echo=FALSE}
 inputPanel(
