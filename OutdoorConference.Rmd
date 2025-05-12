@@ -1,8 +1,22 @@
 ---
-title: "MIAC: Outdoor Conference"
-output: html_document
+title: "MIAC Outdoor Track & Field Analysis and Trends"
+author: "Josh Charlton & Parker Max"
+output: 
+  html_document:
+    theme: cerulean    
+    highlight: tango
+    css: styles.css   
+    toc: false
 runtime: shiny
 ---
+::: {style="text-align: center;"}
+<img src="Stin.jpeg" style="width: 50%; border-radius: 12px; box-shadow: 0px 0px 15px rgba(0,0,0,0.1);"/>
+
+*[Photo Credit: Hannah Robb, St. Olaf College]*
+:::
+
+*The MIAC consists of 13 member colleges across Minnesota. Since 2017, the conference has seen changes such as the departure of the University of St. Thomas and the addition of the College of St. Scholastica. The conference consistently boasts a lineup of national caliber athletes in every event. This page will explore the statistical trends of one of the premier DIII conferences in the country!*
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -209,5 +223,5 @@ renderPlot({
 ```
 
 <div style="text-align: center; margin-top: 30px;">
-  <a href="HomePage.Rmd" class="btn btn-primary" style="margin: 10px;">Home Page</a>
+  <a href="HomePage.Rmd" class="btn btn-primary" style="margin: 10px;">Return to the Home Page</a>
 
