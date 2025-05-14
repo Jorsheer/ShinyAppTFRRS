@@ -70,4 +70,10 @@ renderPlot({
 
 ```
 
+## Conclusion
+
+*This dashboard presents NCAA Division III Outdoor Track and Field trends from 2012 to 2025, capturing over a decade of growth, disruption, and resurgence. The data shows a clear rise in competitiveness across nearly every event, with deeper fields and faster performances year over year. While COVID-19 caused a temporary decline due to limited opportunities, the division has rebounded strongly.*
+
+*Several broader trends suggest that Division III will continue to strengthen. As NCAA Division I programs face roster limits and a shifting NIL (Name, Image, and Likeness) landscape, many athletes are choosing DIII programs that offer strong academics and competitive opportunities without the pressures of DI athletics. This influx of talent, combined with improved coaching, facilities, and access to competition, points toward a bright future for DIII track and field.*
+
 <a href="HomePage.Rmd" class="btn btn-primary" style="margin: 50px;">Return to the Homepage</a>

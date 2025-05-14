@@ -221,6 +221,10 @@ renderPlot({
 
 ```
 
+## Conclusion
+
+*This dashboard highlights MIAC outdoor track and field trends from 2017 to 2025, a period that has seen significant changes in the conference. Outdoor track features several events not contested indoors, such as the 100m, 10,000m, steeplechase, javelin, and more, offering a broader view of team and individual strength. While the conference experienced a dip in performance following COVID and the departure of the University of St. Thomas, the MIAC has since bounced back. Today, with deeper fields and stronger performances, the level of competition is at an all-time high.*
+
 ::: {style="text-align: center; margin-top: 30px;"}
 <a href="HomePage.Rmd" class="btn btn-primary" style="margin: 10px;">Return to the Home Page</a>
 :::
