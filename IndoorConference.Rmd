@@ -16,11 +16,7 @@ runtime: shiny
 *[Photo Credit: Hannah Robb, St. Olaf College]*
 :::
 
-*The Minnesota Intercollegiate Athletic Conference (MIAC) is an intercollegiate athletic conference that competes in the National Collegiate Athletic Association (NCAA) Division III. All 13 of the member schools are located in Minnesota and are private institutions, with only two being non-sectarian.*
-
-*In the context of track and field, each conference can choose what events they choose to have at their conference championship, but most conferences follow closely to the events that are present at the D3 national meet. The events that take place are the 60m, 200m, 400m, 800m, mile, 3000m, 5000m, 60m hurdles, 4x200m relay, 4x400m relay, and distance medley relay on the track, along with the high jump, pole vault, long jump, triple jump, shot put, and weight throw in the field, plus the men's heptathlon and women's pentathlon multi-events.*
-
-*Below are different graphs that are fun to display the MIAC over the years 2017 - 2025, our goal is to show the overall "strength" of the MIAC between different events over the years, displaying athletes and their accomplishments. All data below is collected through the "Performance Lists" on TFRRS, which displays any personal records achieved during the indoor season.*
+*The Minnesota Intercollegiate Athletic Conference (MIAC) is part of NCAA Division III and is made up of 13 private colleges across the state. Track and field is split into indoor and outdoor seasons, each with its own unique set of events. This page focuses on the indoor season, highlighting trends and standout performances across each event. All data is sourced from TFRRS and showcases the depth and strength of one of the top DIII conferences in the nation.*
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
