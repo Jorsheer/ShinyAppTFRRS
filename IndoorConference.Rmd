@@ -240,3 +240,7 @@ renderPlot({
 ::: {style="text-align: center; margin-top: 30px;"}
 <a href="HomePage.Rmd" class="btn btn-primary" style="margin: 10px;">Return to Home Page</a>
 :::
+
+## Conclusions
+
+*This dashboard provides a detailed look at MIAC indoor track and field trends from 2017 to 2025. It’s clear that the conference has become more competitive over time, with deeper fields and faster marks across nearly every event. While performance dipped following COVID due to limited meets and reduced competition opportunities, the MIAC has since rebounded. Today, the level of competition is stronger than ever, solidifying the MIAC as one of the premier conferences in Division III track and field.*
