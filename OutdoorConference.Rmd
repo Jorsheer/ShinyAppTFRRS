@@ -24,18 +24,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r track-ui5, echo=FALSE}
 inputPanel(
-  selectInput("year", "Select Year:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
-  selectInput("event", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
-  sliderInput("athletes", label = "Number of Athletes",
+  selectInput("year5", "Select Year:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
+  selectInput("event5", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
+  sliderInput("athletes5", label = "Number of Athletes",
       min = 1, max = 50, value = 25, step = 1)
 )
 
 renderPlot({
   
   filtered_data <- final_miac_outdoor |>
-    filter(Year == input$year, Event == input$event)
+    filter(Year == input$year5, Event == input$event5)
   
-  top_n <- input$athletes
+  top_n <- input$athletes5
   if (any(!is.na(filtered_data$Time))) {
     filtered_data <- filtered_data |>
       arrange(Time) |>
@@ -68,19 +68,19 @@ renderPlot({
 
 ```{r track-ui6, echo=FALSE}
 inputPanel(
-  selectInput("year1", "Select Year 1:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
-  selectInput("year2", "Select Year 2:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
-  selectInput("event", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
-  sliderInput("athletes", label = "Number of Athletes",
+  selectInput("year6", "Select Year 1:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
+  selectInput("year7", "Select Year 2:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
+  selectInput("event7", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
+  sliderInput("athletes7", label = "Number of Athletes",
       min = 1, max = 50, value = 25, step = 1)
 )
 
 renderPlot({
 
   filtered_data <- final_miac_outdoor |>
-    filter((Year == input$year1 | Year == input$year2), Event == input$event)
+    filter((Year == input$year6 | Year == input$year7), Event == input$event7)
 
-  top_n <- input$athletes
+  top_n <- input$athletes7
   if (any(!is.na(filtered_data$Time))) {
     filtered_data <- filtered_data |>
       group_by(Year) |>
@@ -120,22 +120,22 @@ renderPlot({
 
 ```{r track-ui7, echo=FALSE}
 inputPanel(
-  selectInput("year", "Select Year:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
-  selectInput("event", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
-  sliderInput("athletes", label = "Number of Athletes",
+  selectInput("year8", "Select Year:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
+  selectInput("event8", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
+  sliderInput("athletes8", label = "Number of Athletes",
       min = 1, max = 50, value = 25, step = 1),
-  selectInput("team", "Select Team:", choices = sort(unique(final_miac_outdoor$Team)), selected = "St. Olaf")
+  selectInput("team8", "Select Team:", choices = sort(unique(final_miac_outdoor$Team)), selected = "St. Olaf")
 )
 
 renderPlot({
   
   filtered_data <- final_miac_outdoor |>
-    filter(Year == input$year, Event == input$event)
+    filter(Year == input$year8, Event == input$event8)
   
   filtered_data <- filtered_data |>
-    mutate(point_color = ifelse(Team == input$team, "gold", "gray"))
+    mutate(point_color = ifelse(Team == input$team8, "gold", "gray"))
     
-  top_n <- input$athletes
+  top_n <- input$athletes8
   if (any(!is.na(filtered_data$Time))) {
     filtered_data <- filtered_data |>
       arrange(Time) |>
@@ -167,10 +167,10 @@ renderPlot({
 
 ```{r track-ui8, echo=FALSE}
 inputPanel(
-  selectInput("event", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
-  sliderInput("athletes", label = "Number of Athletes",
+  selectInput("event9", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
+  sliderInput("athletes9", label = "Number of Athletes",
       min = 1, max = 50, value = 25, step = 1),
-  checkboxGroupInput("selected_years", "Select Years:",
+  checkboxGroupInput("selected_years9", "Select Years:",
                      choices = sort(unique(final_miac_outdoor$Year)),
                      selected = sort(unique(final_miac_outdoor$Year)))
 )
@@ -178,9 +178,9 @@ inputPanel(
 renderPlot({
   
   event_data <- final_miac_outdoor |>
-    filter(Event == input$event, Year %in% input$selected_years)
+    filter(Event == input$event9, Year %in% input$selected_years9)
 
-  top_n <- input$athletes
+  top_n <- input$athletes9
 
   if (all(is.na(event_data$Time)) && any(!is.na(event_data$Mark))) {
     filtered_data <- event_data |>
