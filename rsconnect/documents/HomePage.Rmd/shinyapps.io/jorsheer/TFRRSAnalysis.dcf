@@ -1,0 +1,12 @@
+name: TFRRSAnalysis
+title: TFRRSAnalysis
+username: jorsheer
+account: jorsheer
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14756818
+bundleId: 10285067
+url: https://jorsheer.shinyapps.io/TFRRSAnalysis/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

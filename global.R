@@ -85,7 +85,7 @@ final_miac_indoor$Mark <- as.numeric(final_miac_indoor$Mark)
 
 # OUTDOOR
 
-final_miac_outdoor <- get_table(miac_years,"htmlTables/MIAC/MIACoutdoor")
+final_miac_outdoor <- get_table(miac_years,"htmlTables/MIAC/MIACOutdoor")
 final_miac_outdoor <- bind_rows(final_miac_outdoor[1:length(final_miac_outdoor)])
 
 final_miac_outdoor <- final_miac_outdoor |>

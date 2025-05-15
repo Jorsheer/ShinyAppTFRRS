@@ -1,0 +1,12 @@
+name: OutdoorConference
+title: OutdoorConference
+username: jorsheer
+account: jorsheer
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14757574
+bundleId: 10287523
+url: https://jorsheer.shinyapps.io/OutdoorConference/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

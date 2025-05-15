@@ -8,6 +8,37 @@ output:
     css: styles.css   
     toc: false
 runtime: shiny
+resource_files:
+- htmlTables/NATS/NATSOutdoor2012.html
+- htmlTables/NATS/NATSOutdoor2013.html
+- htmlTables/NATS/NATSOutdoor2014.html
+- htmlTables/NATS/NATSOutdoor2015.html
+- htmlTables/NATS/NATSOutdoor2016.html
+- htmlTables/NATS/NATSOutdoor2017.html
+- htmlTables/NATS/NATSOutdoor2018.html
+- htmlTables/NATS/NATSOutdoor2019.html
+- htmlTables/NATS/NATSOutdoor2021.html
+- htmlTables/NATS/NATSOutdoor2022.html
+- htmlTables/NATS/NATSOutdoor2023.html
+- htmlTables/NATS/NATSOutdoor2024.html
+- htmlTables/NATS/NATSOutdoor2025.html
+- htmlTables/MIAC/MIACIndoor2017.html
+- htmlTables/MIAC/MIACIndoor2018.html
+- htmlTables/MIAC/MIACIndoor2019.html
+- htmlTables/MIAC/MIACIndoor2021.html
+- htmlTables/MIAC/MIACIndoor2022.html
+- htmlTables/MIAC/MIACIndoor2023.html
+- htmlTables/MIAC/MIACIndoor2024.html
+- htmlTables/MIAC/MIACIndoor2025.html
+- htmlTables/MIAC/MIACOutdoor2017.html
+- htmlTables/MIAC/MIACOutdoor2018.html
+- htmlTables/MIAC/MIACOutdoor2019.html
+- htmlTables/MIAC/MIACOutdoor2021.html
+- htmlTables/MIAC/MIACOutdoor2022.html
+- htmlTables/MIAC/MIACOutdoor2023.html
+- htmlTables/MIAC/MIACOutdoor2024.html
+- htmlTables/MIAC/MIACOutdoor2025.html
+- global.R
 ---
 
 ::: {style="text-align: center;"}
@@ -34,7 +65,9 @@ inputPanel(
       min = 1, max = 50, value = 25, step = 1)
 )
 
-renderPlot({
+plotOutput("eventPlot")
+
+output$eventPlot <- renderPlot({
   
   filtered_data <- final_nats |>
     filter(Year == input$year11, Event == input$event11)
@@ -53,13 +86,13 @@ renderPlot({
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark, color = Team)) +
       geom_point(size = 3) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Athlete", y = "Mark") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time, color = Team)) +
       geom_point(size = 3) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Athlete", y = "Time (seconds)") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
@@ -83,7 +116,9 @@ inputPanel(
       min = 1, max = 50, value = 25, step = 1)
 )
 
-renderPlot({
+plotOutput("yearComparisonPlot")
+
+output$yearComparisonPlot <- renderPlot({
 
   filtered_data <- final_nats |>
     filter((Year == input$year12 | Year == input$year22), Event == input$event22)
@@ -106,14 +141,14 @@ renderPlot({
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = Place, y = Mark, color = factor(Year))) +
       geom_point(size = 3) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Place", y = "Mark", color = "Year") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = Place, y = Time, color = factor(Year))) +
       geom_point(size = 3) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Place", y = "Time (seconds)", color = "Year") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
@@ -139,7 +174,11 @@ inputPanel(
   selectInput("team33", "Select Team:", choices = sort(unique(final_nats$Team)), selected = "St. Olaf")
 )
 
-renderPlot({
+
+
+plotOutput("teamSearchPlot")
+
+output$teamSearchPlot <- renderPlot({
   
   filtered_data <- final_nats |>
     filter(Year == input$year33, Event == input$event33)
@@ -161,13 +200,13 @@ renderPlot({
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark)) +
       geom_point(size = 3, color = filtered_data$point_color) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Athlete", y = "Mark") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time)) +
       geom_point(size = 3, color = filtered_data$point_color) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Athlete", y = "Time (seconds)") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
@@ -191,7 +230,9 @@ inputPanel(
                      selected = sort(unique(final_nats$Year)))
 )
 
-renderPlot({
+plotOutput("boxplot")
+
+output$boxplot <- renderPlot({
   
   event_data <- final_nats |>
     filter(Event == input$event44, Year %in% input$selected_years44)
@@ -209,7 +250,7 @@ renderPlot({
     ggplot(filtered_data, aes(x = factor(Year), y = Mark, fill = factor(Year))) +
       geom_boxplot(alpha = 0.6) +
       geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
-      labs(title = paste("Top", top_n, "Marks per Year for", input$event),
+      labs(
            x = "Year", y = "Mark") +
       theme_minimal()
 
@@ -224,7 +265,7 @@ renderPlot({
     ggplot(filtered_data, aes(x = factor(Year), y = Time, fill = factor(Year))) +
       geom_boxplot(alpha = 0.6) +
       geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
-      labs(title = paste("Top", top_n, "Times per Year for", input$event),
+      labs(
            x = "Year", y = "Time (seconds)") +
       theme_minimal()
 
@@ -243,4 +284,6 @@ renderPlot({
 
 *Several broader trends suggest that Division III will continue to strengthen. As NCAA Division I programs face roster limits and a shifting NIL (Name, Image, and Likeness) landscape, many athletes are choosing DIII programs that offer strong academics and competitive opportunities without the pressures of DI athletics. This influx of talent, combined with improved coaching, facilities, and access to competition, points toward a bright future for DIII track and field.*
 
-<a href="HomePage.Rmd" class="btn btn-primary" style="margin: 50px;">Return to the Homepage</a>
+::: {style="text-align: center; margin-top: 30px;"}
+<a href=" https://jorsheer.shinyapps.io/TFRRSAnalysis/" class="btn btn-primary" style="margin: 10px;">Home Page</a>
+:::

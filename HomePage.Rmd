@@ -1,13 +1,44 @@
 ---
 title: "NCAA Division III Track & Field Analysis and Trends"
 author: "Josh Charlton & Parker Max"
-output: 
+output:
   html_document:
-    theme: cerulean    
+    theme: cerulean
     highlight: tango
-    css: styles.css   
+    css: styles.css
     toc: false
 runtime: shiny
+resource_files:
+- htmlTables/NATS/NATSOutdoor2012.html
+- htmlTables/NATS/NATSOutdoor2013.html
+- htmlTables/NATS/NATSOutdoor2014.html
+- htmlTables/NATS/NATSOutdoor2015.html
+- htmlTables/NATS/NATSOutdoor2016.html
+- htmlTables/NATS/NATSOutdoor2017.html
+- htmlTables/NATS/NATSOutdoor2018.html
+- htmlTables/NATS/NATSOutdoor2019.html
+- htmlTables/NATS/NATSOutdoor2021.html
+- htmlTables/NATS/NATSOutdoor2022.html
+- htmlTables/NATS/NATSOutdoor2023.html
+- htmlTables/NATS/NATSOutdoor2024.html
+- htmlTables/NATS/NATSOutdoor2025.html
+- htmlTables/MIAC/MIACIndoor2017.html
+- htmlTables/MIAC/MIACIndoor2018.html
+- htmlTables/MIAC/MIACIndoor2019.html
+- htmlTables/MIAC/MIACIndoor2021.html
+- htmlTables/MIAC/MIACIndoor2022.html
+- htmlTables/MIAC/MIACIndoor2023.html
+- htmlTables/MIAC/MIACIndoor2024.html
+- htmlTables/MIAC/MIACIndoor2025.html
+- htmlTables/MIAC/MIACOutdoor2017.html
+- htmlTables/MIAC/MIACOutdoor2018.html
+- htmlTables/MIAC/MIACOutdoor2019.html
+- htmlTables/MIAC/MIACOutdoor2021.html
+- htmlTables/MIAC/MIACOutdoor2022.html
+- htmlTables/MIAC/MIACOutdoor2023.html
+- htmlTables/MIAC/MIACOutdoor2024.html
+- htmlTables/MIAC/MIACOutdoor2025.html
+- global.R
 ---
 
 ::: {style="text-align: center;"}
@@ -23,5 +54,5 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ::: {style="text-align: center; margin-top: 30px;"}
-<a href="IndoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Indoor Conference Analysis</a> <a href="OutdoorConference.Rmd" class="btn btn-primary" style="margin: 10px;">MIAC Outdoor Conference Analysis</a> <a href="Nationals.Rmd" class="btn btn-primary" style="margin: 10px;">NCAA DIII Analysis</a>
+<a href="https://jorsheer.shinyapps.io/IndoorConference/" class="btn btn-primary" style="margin: 10px;">MIAC Indoor Conference Analysis</a> <a href="https://jorsheer.shinyapps.io/OutdoorConference" class="btn btn-primary" style="margin: 10px;">MIAC Outdoor Conference Analysis</a> <a href="https://jorsheer.shinyapps.io/Nationals" class="btn btn-primary" style="margin: 10px;">D3 Nationals Analysis</a>
 :::

@@ -8,8 +8,38 @@ output:
     css: styles.css   
     toc: false
 runtime: shiny
+resource_files:
+- htmlTables/NATS/NATSOutdoor2012.html
+- htmlTables/NATS/NATSOutdoor2013.html
+- htmlTables/NATS/NATSOutdoor2014.html
+- htmlTables/NATS/NATSOutdoor2015.html
+- htmlTables/NATS/NATSOutdoor2016.html
+- htmlTables/NATS/NATSOutdoor2017.html
+- htmlTables/NATS/NATSOutdoor2018.html
+- htmlTables/NATS/NATSOutdoor2019.html
+- htmlTables/NATS/NATSOutdoor2021.html
+- htmlTables/NATS/NATSOutdoor2022.html
+- htmlTables/NATS/NATSOutdoor2023.html
+- htmlTables/NATS/NATSOutdoor2024.html
+- htmlTables/NATS/NATSOutdoor2025.html
+- htmlTables/MIAC/MIACIndoor2017.html
+- htmlTables/MIAC/MIACIndoor2018.html
+- htmlTables/MIAC/MIACIndoor2019.html
+- htmlTables/MIAC/MIACIndoor2021.html
+- htmlTables/MIAC/MIACIndoor2022.html
+- htmlTables/MIAC/MIACIndoor2023.html
+- htmlTables/MIAC/MIACIndoor2024.html
+- htmlTables/MIAC/MIACIndoor2025.html
+- htmlTables/MIAC/MIACOutdoor2017.html
+- htmlTables/MIAC/MIACOutdoor2018.html
+- htmlTables/MIAC/MIACOutdoor2019.html
+- htmlTables/MIAC/MIACOutdoor2021.html
+- htmlTables/MIAC/MIACOutdoor2022.html
+- htmlTables/MIAC/MIACOutdoor2023.html
+- htmlTables/MIAC/MIACOutdoor2024.html
+- htmlTables/MIAC/MIACOutdoor2025.html
+- global.R
 ---
-
 ::: {style="text-align: center;"}
 <img src="Stin.jpeg" style="border-radius: 12px; box-shadow: 0px 0px 15px rgba(0,0,0,0.1);" width="61%"/>
 
@@ -22,6 +52,10 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Event Display
+
+*First is the event display. This shows the different events you can select, and the different times that earned their respective places in the MIAC. This is used to visualize a single year, and helps clear up data from the graphs below.*
+
 ```{r track-ui5, echo=FALSE}
 inputPanel(
   selectInput("year5", "Select Year:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
@@ -30,7 +64,9 @@ inputPanel(
       min = 1, max = 50, value = 25, step = 1)
 )
 
-renderPlot({
+plotOutput("eventPlot")
+
+output$eventPlot <- renderPlot({
   
   filtered_data <- final_miac_outdoor |>
     filter(Year == input$year5, Event == input$event5)
@@ -49,13 +85,13 @@ renderPlot({
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark, color = Team)) +
       geom_point(size = 3) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Athlete", y = "Mark") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time, color = Team)) +
       geom_point(size = 3) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Athlete", y = "Time (seconds)") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
@@ -66,6 +102,9 @@ renderPlot({
 
 ```
 
+## Year Comparison
+
+*The year comparison graph is used to compare two years in any given event. This can be used to tell the strength of the depth of the conference, since it is possible to look up to 50 athletes at any given time. Simply select the two years desired, along with the event and the number of athletes depending on how deep you want to observe.*
 ```{r track-ui6, echo=FALSE}
 inputPanel(
   selectInput("year6", "Select Year 1:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
@@ -75,7 +114,9 @@ inputPanel(
       min = 1, max = 50, value = 25, step = 1)
 )
 
-renderPlot({
+plotOutput("yearComparisonPlot")
+
+output$yearComparisonPlot <- renderPlot({
 
   filtered_data <- final_miac_outdoor |>
     filter((Year == input$year6 | Year == input$year7), Event == input$event7)
@@ -98,14 +139,14 @@ renderPlot({
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = Place, y = Mark, color = factor(Year))) +
       geom_point(size = 3) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Place", y = "Mark", color = "Year") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = Place, y = Time, color = factor(Year))) +
       geom_point(size = 3) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Place", y = "Time (seconds)", color = "Year") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
@@ -118,6 +159,10 @@ renderPlot({
 
 ```
 
+## Team Search
+
+*The team search is used to see one particular team in any given event. Simply select the event you want to observe, along with the team you want to highlight. Athletes from this event that are on the selected team will be shown as gold on the scatterplot.*
+
 ```{r track-ui7, echo=FALSE}
 inputPanel(
   selectInput("year8", "Select Year:", choices = sort(unique(final_miac_outdoor$Year)), selected = max(final_miac_outdoor$Year)),
@@ -127,7 +172,9 @@ inputPanel(
   selectInput("team8", "Select Team:", choices = sort(unique(final_miac_outdoor$Team)), selected = "St. Olaf")
 )
 
-renderPlot({
+plotOutput("teamSearchPlot")
+
+output$teamSearchPlot <- renderPlot({
   
   filtered_data <- final_miac_outdoor |>
     filter(Year == input$year8, Event == input$event8)
@@ -149,13 +196,13 @@ renderPlot({
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark)) +
       geom_point(size = 3, color = filtered_data$point_color) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Athlete", y = "Mark") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time)) +
       geom_point(size = 3, color = filtered_data$point_color) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Athlete", y = "Time (seconds)") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
@@ -164,6 +211,10 @@ renderPlot({
   }
 })
 ```
+
+## Boxplots
+
+*Boxplots here are used to show the IQR of any given event. This can be a great comparison of averages across years, as well as the 25th and 75th percentile. There is also jitter plot overlayed to display the athletes contributing to the plot. Simply select the event and the amount of athletes, and then is possible to display the years.*
 
 ```{r track-ui8, echo=FALSE}
 inputPanel(
@@ -175,7 +226,9 @@ inputPanel(
                      selected = sort(unique(final_miac_outdoor$Year)))
 )
 
-renderPlot({
+plotOutput("boxplot")
+
+output$boxplot <- renderPlot({
   
   event_data <- final_miac_outdoor |>
     filter(Event == input$event9, Year %in% input$selected_years9)
@@ -193,7 +246,7 @@ renderPlot({
     ggplot(filtered_data, aes(x = factor(Year), y = Mark, fill = factor(Year))) +
       geom_boxplot(alpha = 0.6) +
       geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
-      labs(title = paste("Top", top_n, "Marks per Year for", input$event),
+      labs(
            x = "Year", y = "Mark") +
       theme_minimal()
 
@@ -208,7 +261,7 @@ renderPlot({
     ggplot(filtered_data, aes(x = factor(Year), y = Time, fill = factor(Year))) +
       geom_boxplot(alpha = 0.6) +
       geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
-      labs(title = paste("Top", top_n, "Times per Year for", input$event),
+      labs(
            x = "Year", y = "Time (seconds)") +
       theme_minimal()
 
@@ -226,5 +279,5 @@ renderPlot({
 *This dashboard highlights MIAC outdoor track and field trends from 2017 to 2025, a period that has seen significant changes in the conference. Outdoor track features several events not contested indoors, such as the 100m, 10,000m, steeplechase, javelin, and more, offering a broader view of team and individual strength. While the conference experienced a dip in performance following COVID and the departure of the University of St. Thomas, the MIAC has since bounced back. Today, with deeper fields and stronger performances, the level of competition is at an all-time high.*
 
 ::: {style="text-align: center; margin-top: 30px;"}
-<a href="HomePage.Rmd" class="btn btn-primary" style="margin: 10px;">Return to the Home Page</a>
+<a href=" https://jorsheer.shinyapps.io/TFRRSAnalysis/" class="btn btn-primary" style="margin: 10px;">Home Page</a>
 :::

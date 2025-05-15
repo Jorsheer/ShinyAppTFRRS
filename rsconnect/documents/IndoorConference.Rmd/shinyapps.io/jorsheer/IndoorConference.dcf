@@ -1,0 +1,12 @@
+name: IndoorConference
+title: IndoorConference
+username: jorsheer
+account: jorsheer
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14757457
+bundleId: 10285135
+url: https://jorsheer.shinyapps.io/IndoorConference/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

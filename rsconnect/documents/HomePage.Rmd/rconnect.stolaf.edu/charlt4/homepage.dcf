@@ -1,0 +1,13 @@
+name: homepage
+title: HomePage
+username: charlt4
+account: charlt4
+server: rconnect.stolaf.edu
+hostUrl: https://rconnect.stolaf.edu/__api__
+appId: 1015
+bundleId: 2981
+url: https://rconnect.stolaf.edu/content/c0b6ca50-c6f1-4550-9556-114259a87617/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+additionalFiles: rsconnect/documents/HomePage.Rmd/shinyapps.io/jorsheer/TFRRSAnalysis.dcf

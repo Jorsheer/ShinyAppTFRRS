@@ -1,13 +1,45 @@
 ---
 title: "MIAC Indoor Track & Field Analysis and Trends"
 author: "Josh Charlton & Parker Max"
-output: 
+output:
   html_document:
-    theme: cerulean    
+    theme: cerulean
     highlight: tango
-    css: styles.css   
+    css: styles.css
     toc: false
+  output_dir: '.'
 runtime: shiny
+resource_files:
+- htmlTables/NATS/NATSOutdoor2012.html
+- htmlTables/NATS/NATSOutdoor2013.html
+- htmlTables/NATS/NATSOutdoor2014.html
+- htmlTables/NATS/NATSOutdoor2015.html
+- htmlTables/NATS/NATSOutdoor2016.html
+- htmlTables/NATS/NATSOutdoor2017.html
+- htmlTables/NATS/NATSOutdoor2018.html
+- htmlTables/NATS/NATSOutdoor2019.html
+- htmlTables/NATS/NATSOutdoor2021.html
+- htmlTables/NATS/NATSOutdoor2022.html
+- htmlTables/NATS/NATSOutdoor2023.html
+- htmlTables/NATS/NATSOutdoor2024.html
+- htmlTables/NATS/NATSOutdoor2025.html
+- htmlTables/MIAC/MIACIndoor2017.html
+- htmlTables/MIAC/MIACIndoor2018.html
+- htmlTables/MIAC/MIACIndoor2019.html
+- htmlTables/MIAC/MIACIndoor2021.html
+- htmlTables/MIAC/MIACIndoor2022.html
+- htmlTables/MIAC/MIACIndoor2023.html
+- htmlTables/MIAC/MIACIndoor2024.html
+- htmlTables/MIAC/MIACIndoor2025.html
+- htmlTables/MIAC/MIACOutdoor2017.html
+- htmlTables/MIAC/MIACOutdoor2018.html
+- htmlTables/MIAC/MIACOutdoor2019.html
+- htmlTables/MIAC/MIACOutdoor2021.html
+- htmlTables/MIAC/MIACOutdoor2022.html
+- htmlTables/MIAC/MIACOutdoor2023.html
+- htmlTables/MIAC/MIACOutdoor2024.html
+- htmlTables/MIAC/MIACOutdoor2025.html
+- global.R
 ---
 
 ::: {style="text-align: center;"}
@@ -19,6 +51,7 @@ runtime: shiny
 *The Minnesota Intercollegiate Athletic Conference (MIAC) is part of NCAA Division III and is made up of 13 private colleges across the state. Track and field is split into indoor and outdoor seasons, each with its own unique set of events. This page focuses on the indoor season, highlighting trends and standout performances across each event. All data is sourced from TFRRS and showcases the depth and strength of one of the top DIII conferences in the nation.*
 
 ```{r setup, include=FALSE}
+library(shiny)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -26,40 +59,43 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *First is the event display. This shows the different events you can select, and the different times that earned their respective places in the MIAC. This is used to visualize a single year, and helps clear up data from the graphs below.*
 
-```{r track-ui, echo=FALSE}
+```{r, echo=FALSE}
 inputPanel(
   selectInput("year", "Select Year:", choices = sort(unique(final_miac_indoor$Year)), selected = max(final_miac_indoor$Year)),
   selectInput("event", "Select Event:", choices = sort(unique(final_miac_indoor$Event)), selected = "60 Meters (Men)"),
-  sliderInput("athletes", label = "Number of Athletes",
-      min = 1, max = 50, value = 25, step = 1)
+  sliderInput("athletes", label = "Number of Athletes", min = 1, max = 50, value = 25, step = 1)
 )
 
-renderPlot({
-  
-  filtered_data <- final_miac_indoor |>
+plotOutput("eventPlot")
+```
+
+```{r, echo=FALSE}
+output$eventPlot <- renderPlot({
+  filtered_data <- final_miac_indoor %>%
     filter(Year == input$year, Event == input$event)
   
   top_n <- input$athletes
+  
   if (any(!is.na(filtered_data$Time))) {
-    filtered_data <- filtered_data |>
-      arrange(Time) |>
+    filtered_data <- filtered_data %>%
+      arrange(Time) %>%
       head(top_n)
   } else if (any(!is.na(filtered_data$Mark))) {
-    filtered_data <- filtered_data |>
-      arrange(desc(Mark)) |>
+    filtered_data <- filtered_data %>%
+      arrange(desc(Mark)) %>%
       head(top_n)
   }
   
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark, color = Team)) +
       geom_point(size = 3) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Athlete", y = "Mark") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time, color = Team)) +
       geom_point(size = 3) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Athlete", y = "Time (seconds)") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
@@ -67,87 +103,84 @@ renderPlot({
     text(0.5, 0.5, "No valid data for selected event", cex = 1.5)
   }
 })
-
 ```
 
 ## Year Comparison
 
 *The year comparison graph is used to compare two years in any given event. This can be used to tell the strength of the depth of the conference, since it is possible to look up to 50 athletes at any given time. Simply select the two years desired, along with the event and the number of athletes depending on how deep you want to observe.*
 
-```{r track-ui2, echo=FALSE}
+```{r, echo=FALSE}
 inputPanel(
   selectInput("year1", "Select Year 1:", choices = sort(unique(final_miac_indoor$Year)), selected = max(final_miac_indoor$Year)),
   selectInput("year2", "Select Year 2:", choices = sort(unique(final_miac_indoor$Year)), selected = max(final_miac_indoor$Year)),
   selectInput("event1", "Select Event:", choices = sort(unique(final_miac_indoor$Event)), selected = "60 Meters (Men)"),
-  sliderInput("athletes1", label = "Number of Athletes",
-      min = 1, max = 50, value = 25, step = 1)
+  sliderInput("athletes1", label = "Number of Athletes", min = 1, max = 50, value = 25, step = 1)
 )
 
-renderPlot({
+plotOutput("yearComparisonPlot")
 
-  filtered_data <- final_miac_indoor |>
+output$yearComparisonPlot <- renderPlot({
+  filtered_data <- final_miac_indoor %>%
     filter((Year == input$year1 | Year == input$year2), Event == input$event1)
-
+  
   top_n <- input$athletes1
+  
   if (any(!is.na(filtered_data$Time))) {
-    filtered_data <- filtered_data |>
-      group_by(Year) |>
-      arrange(Time, .by_group = TRUE) |>
-      slice_head(n = top_n) |>
+    filtered_data <- filtered_data %>%
+      group_by(Year) %>%
+      arrange(Time, .by_group = TRUE) %>%
+      slice_head(n = top_n) %>%
       ungroup()
   } else if (any(!is.na(filtered_data$Mark))) {
-    filtered_data <- filtered_data |>
-      group_by(Year) |>
-      arrange(desc(Mark), .by_group = TRUE) |>
-      slice_head(n = top_n) |>
+    filtered_data <- filtered_data %>%
+      group_by(Year) %>%
+      arrange(desc(Mark), .by_group = TRUE) %>%
+      slice_head(n = top_n) %>%
       ungroup()
   }
-
+  
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = Place, y = Mark, color = factor(Year))) +
       geom_point(size = 3) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Place", y = "Mark", color = "Year") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = Place, y = Time, color = factor(Year))) +
       geom_point(size = 3) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Place", y = "Time (seconds)", color = "Year") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    
   } else {
     plot.new()
     text(0.5, 0.5, "No valid data for selected event", cex = 1.5)
   }
 })
-
-
 ```
 
 ## Team Search
 
 *The team search is used to see one particular team in any given event. Simply select the event you want to observe, along with the team you want to highlight. Athletes from this event that are on the selected team will be shown as gold on the scatterplot.*
 
-```{r track-ui3, echo=FALSE}
+```{r, echo=FALSE}
 inputPanel(
-  selectInput("year3", "Select Year:", choices = sort(unique(final_miac_indoor$Year)), selected = max(final_miac_indoor$Year)),
-  selectInput("event3", "Select Event:", choices = sort(unique(final_miac_indoor$Event)), selected = "60 Meters (Men)"),
-  sliderInput("athletes3", label = "Number of Athletes",
-      min = 1, max = 50, value = 25, step = 1),
-  selectInput("team3", "Select Team:", choices = sort(unique(final_miac_indoor$Team)), selected = "St. Olaf")
+  selectInput("year8", "Select Year:", choices = sort(unique(final_miac_indoor$Year)), selected = max(final_miac_indoor$Year)),
+  selectInput("event8", "Select Event:", choices = sort(unique(final_miac_indoor$Event)), selected = "60 Meters (Men)"),
+  sliderInput("athletes8", label = "Number of Athletes", min = 1, max = 50, value = 25, step = 1),
+  selectInput("team8", "Select Team:", choices = sort(unique(final_miac_indoor$Team)), selected = "St. Olaf")
 )
 
-renderPlot({
+plotOutput("teamSearchPlot")
+
+output$teamSearchPlot <- renderPlot({
   
-  filtered_data <- final_miac_indoor |>
-    filter(Year == input$year3, Event == input$event3)
+  filtered_data <- final_miac_outdoor |>
+    filter(Year == input$year8, Event == input$event8)
   
   filtered_data <- filtered_data |>
-    mutate(point_color = ifelse(Team == input$team3, "gold", "gray"))
+    mutate(point_color = ifelse(Team == input$team8, "gold", "gray"))
     
-  top_n <- input$athletes3
+  top_n <- input$athletes8
   if (any(!is.na(filtered_data$Time))) {
     filtered_data <- filtered_data |>
       arrange(Time) |>
@@ -161,13 +194,13 @@ renderPlot({
   if (all(is.na(filtered_data$Time)) && any(!is.na(filtered_data$Mark))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, -Mark), y = Mark)) +
       geom_point(size = 3, color = filtered_data$point_color) +
-      labs(title = paste("Marks for", input$event),
+      labs(
            x = "Athlete", y = "Mark") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else if (any(!is.na(filtered_data$Time))) {
     ggplot(filtered_data, aes(x = reorder(Athlete, Time), y = Time)) +
       geom_point(size = 3, color = filtered_data$point_color) +
-      labs(title = paste("Times for", input$event),
+      labs(
            x = "Athlete", y = "Time (seconds)") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
@@ -177,26 +210,29 @@ renderPlot({
 })
 ```
 
+
 ## Boxplots
 
 *Boxplots here are used to show the IQR of any given event. This can be a great comparison of averages across years, as well as the 25th and 75th percentile. There is also jitter plot overlayed to display the athletes contributing to the plot. Simply select the event and the amount of athletes, and then is possible to display the years.*
 
-```{r track-ui4, echo=FALSE}
+```{r, echo=FALSE}
 inputPanel(
-  selectInput("event4", "Select Event:", choices = sort(unique(final_miac_indoor$Event)), selected = "60 Meters (Men)"),
-  sliderInput("athletes4", label = "Number of Athletes",
+  selectInput("event9", "Select Event:", choices = sort(unique(final_miac_outdoor$Event)), selected = "100 Meters (Men)"),
+  sliderInput("athletes9", label = "Number of Athletes",
       min = 1, max = 50, value = 25, step = 1),
-  checkboxGroupInput("selected_years4", "Select Years:",
-                     choices = sort(unique(final_miac_indoor$Year)),
-                     selected = sort(unique(final_miac_indoor$Year)))
+  checkboxGroupInput("selected_years9", "Select Years:",
+                     choices = sort(unique(final_miac_outdoor$Year)),
+                     selected = sort(unique(final_miac_outdoor$Year)))
 )
 
-renderPlot({
-  
-  event_data <- final_miac_indoor |>
-    filter(Event == input$event4, Year %in% input$selected_years4)
+plotOutput("boxplot")
 
-  top_n <- input$athletes4
+output$boxplot <- renderPlot({
+  
+  event_data <- final_miac_outdoor |>
+    filter(Event == input$event9, Year %in% input$selected_years9)
+
+  top_n <- input$athletes9
 
   if (all(is.na(event_data$Time)) && any(!is.na(event_data$Mark))) {
     filtered_data <- event_data |>
@@ -209,7 +245,7 @@ renderPlot({
     ggplot(filtered_data, aes(x = factor(Year), y = Mark, fill = factor(Year))) +
       geom_boxplot(alpha = 0.6) +
       geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
-      labs(title = paste("Top", top_n, "Marks per Year for", input$event),
+      labs(
            x = "Year", y = "Mark") +
       theme_minimal()
 
@@ -224,7 +260,7 @@ renderPlot({
     ggplot(filtered_data, aes(x = factor(Year), y = Time, fill = factor(Year))) +
       geom_boxplot(alpha = 0.6) +
       geom_jitter(width = 0.2, size = 2, alpha = 0.7) +
-      labs(title = paste("Top", top_n, "Times per Year for", input$event),
+      labs(
            x = "Year", y = "Time (seconds)") +
       theme_minimal()
 
@@ -234,7 +270,6 @@ renderPlot({
   }
 })
 
-
 ```
 
 
@@ -242,8 +277,6 @@ renderPlot({
 
 *This dashboard provides a detailed look at MIAC indoor track and field trends from 2017 to 2025. It’s clear that the conference has become more competitive over time, with deeper fields and faster marks across nearly every event. While performances dipped following COVID due to limited meets and competition opportunities, as well as the exit of the University of St. Thomas, the MIAC has since rebounded. Today, the level of competition is stronger than ever, solidifying the MIAC as one of the premier conferences in Division III track and field.*
 
-
-
 ::: {style="text-align: center; margin-top: 30px;"}
-<a href="HomePage.Rmd" class="btn btn-primary" style="margin: 10px;">Return to Home Page</a>
+<a href=" https://jorsheer.shinyapps.io/TFRRSAnalysis/" class="btn btn-primary" style="margin: 10px;">Home Page</a>
 :::
